@@ -1,11 +1,12 @@
-// // mainfolder/actions/actions.js
+// mainfolder/actions/actions.js
+
 'use server';
 
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
 import WeeklySummary from '@/models/WeeklySummary';
 import { calculateHoursWorked, getWeeklyPeriod } from '@/utils/dateUtils';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'; // Verify the import path
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 export default async function createTimesheet(formData) {
   try {
