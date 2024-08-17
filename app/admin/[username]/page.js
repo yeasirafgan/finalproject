@@ -1,8 +1,11 @@
-// //mainfolder/app/admin/[username]/page.js
+// app/admin/[username]/page.js
 
+import DeleteButton from '@/components/DeleteButton';
+import EditButton from '@/components/EditButton';
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
 import { calculateHoursWorked } from '@/utils/dateUtils';
+import Link from 'next/link';
 
 const UserDetailPage = async ({ params }) => {
   const username = decodeURIComponent(params.username);
@@ -41,37 +44,68 @@ const UserDetailPage = async ({ params }) => {
 
   return (
     <main className='p-10'>
-      <h1 className='text-xl font-bold mb-5'>{`${username}'s work.`}</h1>
+      <div className='flex justify-end'>
+        <Link
+          href='../admin'
+          className='px-4 py-2 bg-slate-700 hover:bg-slate-900 text-white rounded '
+        >
+          Go Back
+        </Link>
+      </div>
+      <h1 className='text-xl font-bold mb-5 text-lime-800 hover:text-emerald-950 '>{`${username}'s work.`}</h1>
       <div className='overflow-x-auto'>
-        <table className='min-w-full bg-white border'>
-          <thead>
+        <table className='min-w-full bg-white border border-gray-200'>
+          <thead className='bg-gray-100'>
             <tr>
-              <th className='border px-4 py-2'>Date</th>
-              <th className='border px-4 py-2'>Start</th>
-              <th className='border px-4 py-2'>End</th>
-              <th className='border px-4 py-2'>Hours Worked</th>
+              <th className='border border-gray-300 px-4 py-2 text-left text-sm font-semibold w-1/4 text-lime-800 hover:text-emerald-950'>
+                Date
+              </th>
+              <th className='border border-gray-300 px-4 py-1 text-left text-sm font-semibold w-1/4 text-lime-800 hover:text-emerald-950'>
+                Start
+              </th>
+              <th className='border border-gray-300 px-4 py-1 text-left text-sm font-semibold w-1/4 text-lime-800 hover:text-emerald-950'>
+                End
+              </th>
+              <th className='border border-gray-300 px-4 py-1 text-left text-sm font-semibold w-1/4 text-lime-800 hover:text-emerald-950'>
+                Hours Worked
+              </th>
+              <th className='border border-gray-300 px-4 py-1 text-left text-sm font-semibold w-1/4 text-lime-800 hover:text-emerald-950'>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {lastFourWeeksTimesheets.map((timesheet) => (
-              <tr key={timesheet._id}>
-                <td className='border px-4 py-2'>
+              <tr key={timesheet._id.toString()} className='hover:bg-gray-50'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
                   {formatDate(timesheet.date)}
                 </td>
-                <td className='border px-4 py-2'>{timesheet.start}</td>
-                <td className='border px-4 py-2'>{timesheet.end}</td>
-                <td className='border px-4 py-2'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                  {timesheet.start}
+                </td>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                  {timesheet.end}
+                </td>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
                   {calculateHoursWorked(timesheet.start, timesheet.end)} hrs
+                </td>
+
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 flex'>
+                  <EditButton id={timesheet._id.toString()} />
+                  <DeleteButton id={timesheet._id.toString()} />
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
-              <td className='border px-4 py-2 font-bold' colSpan='3'>
+              <td
+                className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'
+                colSpan='3'
+              >
                 Total Hours (Last 4 Weeks)
               </td>
-              <td className='border px-4 py-2 font-bold'>
+              <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
                 {totalHours.toFixed(2)} hrs
               </td>
             </tr>

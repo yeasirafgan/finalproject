@@ -28,7 +28,7 @@ const Header = () => {
     <header className='flex justify-between items-center py-4 px-7 border-b'>
       <Link href={'/'}>
         {/* <Image src={logo} alt='logo' width={40} height={40} /> */}
-        <h1 className='text-xl font-semibold text-zinc-600'>
+        <h1 className='text-xl font-semibold text-slate-700'>
           Deer Park Timesheet
         </h1>
       </Link>

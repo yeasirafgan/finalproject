@@ -1,9 +1,6 @@
-// app/timesheet/page.js
+// // app/timesheet/page.js
 import createTimesheet from '@/actions/actions';
-import {
-  getKindeServerSession,
-  LogoutLink,
-} from '@kinde-oss/kinde-auth-nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import UserTimesheetData from '@/components/UserTimesheetData';
 
@@ -22,26 +19,29 @@ const TimesheetPage = async () => {
     <main className='flex flex-col md:flex-row justify-center items-start bg-white p-5 space-y-5 md:space-y-0'>
       {/* Form Section */}
       <div className='bg-white shadow-lg rounded-lg p-8 w-full md:w-1/2 lg:w-1/3'>
-        <h1 className='text-xl font-semibold mb-6 text-gray-800 text-center'>
-          Assign your work today
+        <h1 className=' text-md font-bold mb-6 text-emerald-900'>
+          How many hours you work today
         </h1>
 
         <form action={createTimesheet} className='space-y-6'>
           <div className='flex flex-col'>
-            <label className='text-sm font-medium text-gray-700' htmlFor='date'>
+            <label
+              className='text-sm font-medium text-emerald-900'
+              htmlFor='date'
+            >
               Date
             </label>
             <input
               type='date'
               name='date'
               id='date'
-              className='border rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              className='border text-emerald-900 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-emerald-700 focus:border-emerald-900'
               required
             />
           </div>
           <div className='flex flex-col'>
             <label
-              className='text-sm font-medium text-gray-700'
+              className='text-sm font-medium text-emerald-900'
               htmlFor='start'
             >
               Start Time
@@ -50,19 +50,22 @@ const TimesheetPage = async () => {
               type='time'
               name='start'
               id='start'
-              className='border rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              className='border text-emerald-900 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-emerald-700 focus:border-emerald-900'
               required
             />
           </div>
           <div className='flex flex-col'>
-            <label className='text-sm font-medium text-gray-700' htmlFor='end'>
+            <label
+              className='text-sm font-medium text-emerald-900'
+              htmlFor='end'
+            >
               End Time
             </label>
             <input
               type='time'
               name='end'
               id='end'
-              className='border rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              className='border text-emerald-900 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-emerald-700 focus:border-emerald-900'
               required
             />
           </div>
@@ -80,11 +83,6 @@ const TimesheetPage = async () => {
       {/* User Timesheet Data Section */}
       <div className='bg-white lg:ml-2 shadow-lg rounded-lg p-8 w-full md:w-1/2 lg:w-2/3'>
         <UserTimesheetData username={username} />
-      </div>
-      <div>
-        <LogoutLink className='block w-full md:w-auto px-6 py-3 bg-slate-800 text-white font-semibold rounded-lg shadow-lg hover:bg-slate-700 transition duration-300'>
-          Logout
-        </LogoutLink>
       </div>
     </main>
   );

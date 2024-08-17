@@ -1,4 +1,4 @@
-// //  mainfolder/components/UserTimesheetData
+// mainfolder / components / UserTimesheetData;
 
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
@@ -31,6 +31,16 @@ const UserTimesheetData = async ({ username }) => {
       return sum + calculateHoursWorked(ts.start, ts.end);
     }, 0);
 
+    // Function to format date as "17 Aug 24"
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+      }).format(date);
+    };
+
     return (
       <div className='p-5'>
         <h2 className='text-xl font-semibold mb-4'>{username}s Timesheets</h2>
@@ -47,9 +57,7 @@ const UserTimesheetData = async ({ username }) => {
             <tbody>
               {timesheets.map((ts) => (
                 <tr key={ts._id}>
-                  <td className='border px-4 py-2'>
-                    {new Date(ts.date).toLocaleDateString()}
-                  </td>
+                  <td className='border px-4 py-2'>{formatDate(ts.date)}</td>
                   <td className='border px-4 py-2'>{ts.start}</td>
                   <td className='border px-4 py-2'>{ts.end}</td>
                   <td className='border px-4 py-2'>

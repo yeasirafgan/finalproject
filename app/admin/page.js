@@ -1,4 +1,4 @@
-// // // // mainfolder/app/admin/page.js
+// mainfolder/app/admin/page.js
 
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
@@ -68,28 +68,39 @@ const AdminPage = async () => {
 
   return (
     <main className='p-5 sm:p-10'>
-      <h1 className='text-2xl sm:text-3xl font-bold mb-6'>Admin Area</h1>
+      <div className='flex justify-end'>
+        <Link
+          href='/api/generate-timesheet'
+          className='px-4 py-2 bg-slate-700 hover:bg-slate-900 text-white rounded '
+        >
+          Export to Excel
+        </Link>
+      </div>
+      <h1 className='text-xl sm:text-2xl font-bold mb-6 text-lime-800 hover:text-emerald-950 '>
+        Admin Area
+      </h1>
+
       <div className='overflow-x-auto'>
         <table className='min-w-full bg-white border border-gray-200'>
           <thead className='bg-gray-100'>
             <tr>
-              <th className='border border-gray-300 px-4 py-2 text-left text-sm font-semibold w-32'>
+              <th className='border border-gray-300 px-4 py-2 text-left text-sm font-semibold w-32 text-lime-800 hover:text-emerald-950'>
                 Name
               </th>
               {dateRanges.map((range, index) => (
                 <th
                   key={index}
-                  className='border border-gray-300 px-2 py-1 text-center text-xs w-24'
+                  className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'
                 >
                   {`${formatDate(new Date(range.start))} - ${formatDate(
                     new Date(range.end)
                   )}`}
                 </th>
               ))}
-              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24'>
+              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'>
                 Total (4 Weeks)
               </th>
-              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24'>
+              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'>
                 Details
               </th>
             </tr>
@@ -97,7 +108,7 @@ const AdminPage = async () => {
           <tbody>
             {Object.values(usersTimesheets).map((user) => (
               <tr key={user.username} className='hover:bg-gray-50'>
-                <td className='border border-gray-300 px-4 py-2 text-left text-sm'>
+                <td className='border border-gray-300 px-4 py-2 text-left text-sm text-slate-700 hover:text-emerald-900 font-bold'>
                   {user.username || 'Unknown'}
                 </td>
                 {dateRanges.map((range, index) => {
@@ -107,19 +118,19 @@ const AdminPage = async () => {
                   return (
                     <td
                       key={index}
-                      className='border border-gray-300 px-2 py-1 text-center text-xs'
+                      className='border border-gray-300 px-2 py-1 text-center text-xs font-semibold text-slate-700 hover:text-emerald-900'
                     >
                       {(user.periods[periodKey] || 0).toFixed(2)} hrs
                     </td>
                   );
                 })}
-                <td className='border border-gray-300 px-2 py-1 text-center text-xs'>
+                <td className='border border-gray-300 px-2 py-1 text-center text-sm font-bold text-slate-700 hover:text-emerald-900'>
                   {user.totalHours.toFixed(2)} hrs
                 </td>
-                <td className='border border-gray-300 px-2 py-1 text-center text-xs'>
+                <td className='border border-gray-300 px-2 py-1 text-center text-sm '>
                   <Link
                     href={`/admin/${encodeURIComponent(user.username)}`}
-                    className='text-blue-500 hover:underline'
+                    className='text-emerald-900 hover:text-slate-700 font-bold'
                   >
                     View Details
                   </Link>
