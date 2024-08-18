@@ -55,50 +55,62 @@ export function getLastFourWeeks() {
   return weeks;
 }
 
-// export function calculateHoursWorked(start, end) {
-//   const startDate = new Date(`1970-01-01T${start}:00Z`);
-//   const endDate = new Date(`1970-01-01T${end}:00Z`);
+// export const calculateHoursWorked = (start, end) => {
+//   // Helper function to normalize time
+//   const normalizeTime = (time) => {
+//     if (time.includes(':')) {
+//       const [hours, minutes] = time
+//         .split(':')
+//         .map((num) => num.padStart(2, '0'));
+//       return `${hours}:${minutes}`;
+//     } else if (time.length === 1) {
+//       return `0${time}:00`;
+//     } else if (time.length === 2) {
+//       return `${time}:00`;
+//     } else if (time.length === 3) {
+//       return `${time.slice(0, 1)}${time.slice(1, 3)}:00`;
+//     } else if (time.length === 4) {
+//       return `${time.slice(0, 2)}:${time.slice(2)}`;
+//     }
+//     return '00:00'; // Default value if the format is not recognized
+//   };
 
-//   // If end time is before start time, assume it is on the next day
-//   if (endDate < startDate) {
-//     endDate.setDate(endDate.getDate() + 1);
+//   const [startHours, startMinutes] = normalizeTime(start)
+//     .split(':')
+//     .map(Number);
+//   const [endHours, endMinutes] = normalizeTime(end).split(':').map(Number);
+
+//   const startDate = new Date(1970, 0, 1, startHours, startMinutes);
+//   const endDate = new Date(1970, 0, 1, endHours, endMinutes);
+
+//   const diff = endDate - startDate; // Difference in milliseconds
+
+//   let hours;
+//   if (diff < 0) {
+//     // Handle cases where end time is the next day
+//     hours = (24 * 60 * 60 * 1000 + diff) / (60 * 60 * 1000);
+//   } else {
+//     hours = diff / (60 * 60 * 1000);
 //   }
 
-//   const differenceInMilliseconds = endDate - startDate;
-//   const hours = differenceInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
-
-//   return parseFloat(hours.toFixed(2)); // Round to two decimal places
-// }
-
-// utils/dateUtils.js
-
-// utils/dateUtils.js
-
-export const normalizeTime = (time) => {
-  // Check if the time is in the format HH:mm or H:mm
-  if (time.includes(':')) {
-    // If the time already includes ':', assume it is in HH:mm or H:mm format
-    const [hours, minutes] = time.split(':').map((num) => num.padStart(2, '0'));
-    return `${hours}:${minutes}`;
-  } else if (time.length === 1) {
-    // If the time is a single digit, assume it is H (e.g., '8') and pad it to HH:mm format
-    return `0${time}:00`;
-  } else if (time.length === 2) {
-    // If the time is two digits, assume it is HH (e.g., '08') and pad minutes to '00'
-    return `${time}:00`;
-  } else if (time.length === 3) {
-    // If the time is three digits, assume it is HMM (e.g., '830') and convert it to HH:mm
-    return `${time.slice(0, 1)}${time.slice(1, 3)}:00`;
-  } else if (time.length === 4) {
-    // If the time is four digits, assume it is HHMM (e.g., '0830') and convert it to HH:mm
-    return `${time.slice(0, 2)}:${time.slice(2)}`;
-  }
-  return '00:00'; // Default value if the format is not recognized
-};
-
-// utils/dateUtils.js
+//   return parseFloat(hours.toFixed(2));
+// };
 
 export const calculateHoursWorked = (start, end) => {
+  const normalizeTime = (time) => {
+    if (time.includes(':')) {
+      const [hours, minutes] = time
+        .split(':')
+        .map((num) => num.padStart(2, '0'));
+      return `${hours}:${minutes}`;
+    }
+    if (time.length === 1) return `0${time}:00`;
+    if (time.length === 2) return `${time}:00`;
+    if (time.length === 3) return `${time.slice(0, 1)}${time.slice(1, 3)}:00`;
+    if (time.length === 4) return `${time.slice(0, 2)}:${time.slice(2)}`;
+    return '00:00'; // Default value if the format is not recognized
+  };
+
   const [startHours, startMinutes] = normalizeTime(start)
     .split(':')
     .map(Number);
@@ -108,11 +120,15 @@ export const calculateHoursWorked = (start, end) => {
   const endDate = new Date(1970, 0, 1, endHours, endMinutes);
 
   const diff = endDate - startDate; // Difference in milliseconds
+  const msInHour = 60 * 60 * 1000; // Number of milliseconds in an hour
 
+  let hours;
   if (diff < 0) {
     // Handle cases where end time is the next day
-    return (24 * 60 * 60 * 1000 + diff) / (60 * 60 * 1000); // Adding 24 hours in milliseconds
+    hours = (24 * msInHour + diff) / msInHour;
+  } else {
+    hours = diff / msInHour;
   }
 
-  return diff / (60 * 60 * 1000); // Convert milliseconds to hours
+  return Math.round(hours * 100) / 100; // Round to two decimal places
 };

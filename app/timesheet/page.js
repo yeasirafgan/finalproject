@@ -1,8 +1,9 @@
 // // app/timesheet/page.js
 import createTimesheet from '@/actions/actions';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { redirect } from 'next/navigation';
+
 import UserTimesheetData from '@/components/UserTimesheetData';
+import { redirect } from 'next/navigation';
 
 const TimesheetPage = async () => {
   const { isAuthenticated, getUser } = getKindeServerSession();

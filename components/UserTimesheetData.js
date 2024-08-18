@@ -31,6 +31,14 @@ const UserTimesheetData = async ({ username }) => {
       return sum + calculateHoursWorked(ts.start, ts.end);
     }, 0);
 
+    // const totalHours = parseFloat(
+    //   timesheets
+    //     .reduce((sum, ts) => {
+    //       return sum + calculateHoursWorked(ts.start, ts.end);
+    //     }, 0)
+    //     .toFixed(2)
+    // );
+
     // Function to format date as "17 Aug 24"
     const formatDate = (dateString) => {
       const date = new Date(dateString);

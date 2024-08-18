@@ -8,9 +8,21 @@ import {
   formatDate,
   getStartOfWeek,
 } from '@/utils/dateUtils';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 const AdminPage = async () => {
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  if (!(await isAuthenticated())) {
+    redirect('/api/auth/login?post_login_redirect_url=/admin');
+  }
+
+  const user = await getUser();
+  const username = user
+    ? `${user.given_name || ''} ${user.family_name || ''}`.trim() || user.email
+    : 'Unknown';
+
   await connectMongo();
 
   const timesheets = await Timesheet.find({}).sort({ date: 1 });
@@ -76,7 +88,7 @@ const AdminPage = async () => {
           Export to Excel
         </Link>
       </div>
-      <h1 className='text-xl sm:text-2xl font-bold mb-6 text-lime-800 hover:text-emerald-950 '>
+      <h1 className='text-lg font-semibold mb-2 text-lime-800 hover:text-emerald-950 '>
         Admin Area
       </h1>
 
@@ -130,7 +142,7 @@ const AdminPage = async () => {
                 <td className='border border-gray-300 px-2 py-1 text-center text-sm '>
                   <Link
                     href={`/admin/${encodeURIComponent(user.username)}`}
-                    className='text-emerald-900 hover:text-slate-700 font-bold'
+                    className='text-emerald-700 hover:text-green-500 font-bold'
                   >
                     View Details
                   </Link>

@@ -52,7 +52,7 @@ const UserDetailPage = async ({ params }) => {
           Go Back
         </Link>
       </div>
-      <h1 className='text-xl font-bold mb-5 text-lime-800 hover:text-emerald-950 '>{`${username}'s work.`}</h1>
+      <h1 className='text-lg font-semibold mb-2 text-lime-800 hover:text-emerald-950 '>{`${username}'s work.`}</h1>
       <div className='overflow-x-auto'>
         <table className='min-w-full bg-white border border-gray-200'>
           <thead className='bg-gray-100'>
@@ -77,16 +77,16 @@ const UserDetailPage = async ({ params }) => {
           <tbody>
             {lastFourWeeksTimesheets.map((timesheet) => (
               <tr key={timesheet._id.toString()} className='hover:bg-gray-50'>
-                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-slate-700 hover:text-emerald-900 font-semibold'>
                   {formatDate(timesheet.date)}
                 </td>
-                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-slate-700 hover:text-emerald-900 '>
                   {timesheet.start}
                 </td>
-                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-slate-700 hover:text-emerald-900'>
                   {timesheet.end}
                 </td>
-                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+                <td className='border border-gray-300 px-4 py-1 text-left text-sm text-slate-700 hover:text-emerald-900  font-bold'>
                   {calculateHoursWorked(timesheet.start, timesheet.end)} hrs
                 </td>
 
@@ -100,12 +100,15 @@ const UserDetailPage = async ({ params }) => {
           <tfoot>
             <tr>
               <td
-                className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'
+                className='border border-gray-300 px-4 py-1 text-left text-sm text-slate-700 hover:text-emerald-900 font-extrabold'
                 colSpan='3'
               >
                 Total Hours (Last 4 Weeks)
               </td>
-              <td className='border border-gray-300 px-4 py-1 text-left text-sm text-lime-800 hover:text-emerald-950 font-bold'>
+              <td
+                className='border border-gray-300 px-4 py-1 text-left text-slate-950 hover:text-emerald-900 font-extrabold text-sm'
+                colSpan='2'
+              >
                 {totalHours.toFixed(2)} hrs
               </td>
             </tr>

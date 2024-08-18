@@ -47,7 +47,7 @@ const EditTimesheetForm = ({ timesheet }) => {
       </div>
       <button
         onClick={handleSave}
-        className='px-4 py-2 bg-green-700 text-white rounded hover:bg-green-900'
+        className='px-4 py-2 bg-slate-700 text-white rounded hover:bg-green-900'
       >
         Save
       </button>

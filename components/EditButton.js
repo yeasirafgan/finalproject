@@ -13,7 +13,7 @@ const EditButton = ({ id }) => {
   return (
     <button
       onClick={handleEdit}
-      className='px-2 py-0.5 bg-blue-700 text-xs text-white rounded hover:bg-zinc-800 mr-2'
+      className='px-2 py-0.5 bg-slate-700 text-xs text-white rounded hover:bg-blue-800 mr-2'
     >
       Edit
     </button>

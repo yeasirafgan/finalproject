@@ -28,7 +28,7 @@ const DeleteButton = ({ id }) => {
   return (
     <button
       onClick={handleDelete}
-      className='px-2 py-0.5 bg-red-700 text-xs text-white rounded hover:bg-zinc-800'
+      className='px-2 py-0.5 bg-red-700 text-xs text-white rounded hover:bg-red-600'
     >
       Delete
     </button>

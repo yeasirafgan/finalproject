@@ -1,7 +1,10 @@
 // mainfolder/app/page.js
-import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/server';
+import {
+  LoginLink,
+  RegisterLink,
+  LogoutLink,
+} from '@kinde-oss/kinde-auth-nextjs/server';
 
-// src/app/page.tsx
 const Home = () => {
   return (
     <main className='flex flex-col items-center justify-center min-h-screen px-4 py-12 bg-gradient-to-r from-gray-50 to-gray-100 text-white'>
@@ -20,6 +23,9 @@ const Home = () => {
           <RegisterLink className='block w-full md:w-auto px-6 py-3 bg-slate-700 text-white font-semibold rounded-lg shadow-lg hover:bg-slate-800 transition duration-300'>
             Register
           </RegisterLink>
+          <LogoutLink className='block w-full md:w-auto px-6 py-3 bg-slate-700 text-white font-semibold rounded-lg shadow-lg hover:bg-slate-800 transition duration-300'>
+            Logout
+          </LogoutLink>
         </div>
       </div>
     </main>
