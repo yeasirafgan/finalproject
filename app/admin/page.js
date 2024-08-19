@@ -80,10 +80,10 @@ const AdminPage = async () => {
 
   return (
     <main className='p-5 sm:p-10'>
-      <div className='flex justify-end'>
+      <div className='flex justify-end space-x-4'>
         <Link
-          href='/api/generate-timesheet'
-          className='px-4 py-2 bg-slate-700 hover:bg-slate-900 text-white rounded '
+          href='/api/generate-timesheet?type=summary'
+          className='px-4 py-1 bg-slate-700 hover:bg-slate-900 text-white rounded'
         >
           Export to Excel
         </Link>

@@ -1,7 +1,6 @@
 //mainfolder/actions/adminActions.js
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
-import { calculateHoursWorked } from '@/utils/dateUtils';
 
 export async function fetchTimesheetData() {
   await connectMongo();

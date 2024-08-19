@@ -44,10 +44,16 @@ const UserDetailPage = async ({ params }) => {
 
   return (
     <main className='p-10'>
-      <div className='flex justify-end'>
+      <div className='flex justify-end gap-3'>
+        <Link
+          href='/api/generate-timesheet?type=detailed'
+          className='px-4 py-1 bg-slate-700 hover:bg-slate-900 text-white rounded'
+        >
+          Export to Excel
+        </Link>
         <Link
           href='../admin'
-          className='px-4 py-2 bg-slate-700 hover:bg-slate-900 text-white rounded '
+          className='px-4 py-1 bg-slate-700 hover:bg-slate-900 text-white rounded '
         >
           Go Back
         </Link>

@@ -46,6 +46,7 @@ export default async function createTimesheet(formData) {
 
     console.log('Timesheet saved and weekly summary updated successfully');
   } catch (error) {
-    console.log('Error saving timesheet:', error.message);
+    console.error('Error saving timesheet:', error.message);
+    // Handle the error appropriately, e.g., by showing an error message
   }
 }
