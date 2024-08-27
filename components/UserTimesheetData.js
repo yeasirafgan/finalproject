@@ -1,8 +1,11 @@
-// mainfolder / components / UserTimesheetData;
+// // // mainfolder / components / UserTimesheetData;
 
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
-import { calculateHoursWorked } from '@/utils/dateUtils';
+import {
+  calculateTotalMinutes,
+  convertMinutesToHours,
+} from '@/utils/dateUtils';
 
 const UserTimesheetData = async ({ username }) => {
   try {
@@ -10,12 +13,10 @@ const UserTimesheetData = async ({ username }) => {
 
     const today = new Date();
     const startOfWeek = new Date(today);
-    // Set start of the week to Monday
     startOfWeek.setDate(today.getDate() - (today.getDay() || 7) + 1);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const endOfWeek = new Date(startOfWeek);
-    // Set end of the week to Sunday
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
 
@@ -27,17 +28,9 @@ const UserTimesheetData = async ({ username }) => {
       },
     }).sort({ date: -1 });
 
-    const totalHours = timesheets.reduce((sum, ts) => {
-      return sum + calculateHoursWorked(ts.start, ts.end);
-    }, 0);
-
-    // const totalHours = parseFloat(
-    //   timesheets
-    //     .reduce((sum, ts) => {
-    //       return sum + calculateHoursWorked(ts.start, ts.end);
-    //     }, 0)
-    //     .toFixed(2)
-    // );
+    const totalMinutes = calculateTotalMinutes(timesheets);
+    const { hours: totalHours, minutes: remainingMinutes } =
+      convertMinutesToHours(totalMinutes);
 
     // Function to format date as "17 Aug 24"
     const formatDate = (dateString) => {
@@ -49,38 +42,71 @@ const UserTimesheetData = async ({ username }) => {
       }).format(date);
     };
 
+    // Function to format hours and minutes
+    const formatTime = (hours, minutes) => {
+      if (minutes === 0) {
+        return `${hours} hrs`;
+      } else {
+        return `${hours} hrs ${minutes} mins`;
+      }
+    };
+
     return (
-      <div className='p-5'>
-        <h2 className='text-xl font-semibold mb-4'>{username}s Timesheets</h2>
+      <div className='p-4 sm:p-5'>
+        <h2
+          className={`text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center sm:text-left`}
+        >
+          {`${username}'s Timesheets`}
+        </h2>
         <div className='overflow-x-auto'>
-          <table className='min-w-full bg-white border'>
+          <table className='min-w-full bg-white border text-xs sm:text-sm'>
             <thead>
-              <tr>
-                <th className='border px-4 py-2'>Date</th>
-                <th className='border px-4 py-2'>Start</th>
-                <th className='border px-4 py-2'>End</th>
-                <th className='border px-4 py-2'>Hours Worked</th>
+              <tr className='bg-gray-100'>
+                <th className='border px-2 sm:px-4 py-2 text-left'>Date</th>
+                <th className='border px-2 sm:px-4 py-2 text-left'>Start</th>
+                <th className='border px-2 sm:px-4 py-2 text-left'>End</th>
+                <th className='border px-2 sm:px-4 py-2 text-left'>
+                  Hours Worked
+                </th>
               </tr>
             </thead>
             <tbody>
-              {timesheets.map((ts) => (
-                <tr key={ts._id}>
-                  <td className='border px-4 py-2'>{formatDate(ts.date)}</td>
-                  <td className='border px-4 py-2'>{ts.start}</td>
-                  <td className='border px-4 py-2'>{ts.end}</td>
-                  <td className='border px-4 py-2'>
-                    {calculateHoursWorked(ts.start, ts.end).toFixed(2)} hrs
-                  </td>
-                </tr>
-              ))}
+              {timesheets.map((ts) => {
+                const { hours, minutes } = convertMinutesToHours(
+                  calculateTotalMinutes([{ start: ts.start, end: ts.end }])
+                );
+
+                const formattedHours = Math.floor(hours);
+                const formattedMinutes = Math.round(minutes);
+
+                return (
+                  <tr key={ts._id} className='hover:bg-gray-50'>
+                    <td className='border px-2 sm:px-4 py-1 sm:py-2'>
+                      {formatDate(ts.date)}
+                    </td>
+                    <td className='border px-2 sm:px-4 py-1 sm:py-2'>
+                      {ts.start}
+                    </td>
+                    <td className='border px-2 sm:px-4 py-1 sm:py-2'>
+                      {ts.end}
+                    </td>
+                    <td className='border px-2 sm:px-4 py-1 sm:py-2 font-medium'>
+                      {formatTime(formattedHours, formattedMinutes)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
-              <tr>
-                <td colSpan='3' className='border px-4 py-2 font-bold'>
+              <tr className='bg-gray-100'>
+                <td
+                  colSpan='3'
+                  className='border px-2 sm:px-4 py-2 font-bold text-left'
+                >
                   Total Hours
                 </td>
-                <td className='border px-4 py-2 font-bold'>
-                  {totalHours.toFixed(2)} hrs
+                <td className='border px-2 sm:px-4 py-2 font-bold'>
+                  {formatTime(totalHours, remainingMinutes)}
                 </td>
               </tr>
             </tfoot>

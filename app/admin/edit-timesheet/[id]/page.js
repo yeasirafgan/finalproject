@@ -9,6 +9,10 @@ export default async function EditTimesheetPage({ params }) {
   await connectMongo();
   const timesheet = await Timesheet.findById(params.id).lean();
 
+  if (!timesheet) {
+    return <div>Timesheet not found</div>;
+  }
+
   // Convert the ObjectId to a string
   timesheet._id = timesheet._id.toString();
 

@@ -1,6 +1,7 @@
 // // mainfolder/components/Header.js
 
 'use client';
+import Image from 'next/image';
 // import Image from 'next/image';
 // import logo from '../../public/dplogo.png';
 import Link from 'next/link';

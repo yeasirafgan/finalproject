@@ -1,134 +1,131 @@
-//mainfolder/utils/dateUtils.js
+// // //mainfolder/utils/dateUtils.js
 
+import {
+  startOfWeek,
+  endOfWeek,
+  format,
+  differenceInMinutes,
+  addDays,
+  subWeeks,
+} from 'date-fns';
+
+// Get the start and end date of the week
 export function getWeeklyPeriod(date) {
-  const startOfWeek = new Date(date);
-  const day = startOfWeek.getDay();
-  const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-  startOfWeek.setDate(diff);
-
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  const start = startOfWeek(new Date(date), { weekStartsOn: 1 }); // Week starts on Monday
+  const end = endOfWeek(start, { weekStartsOn: 1 });
 
   return {
-    startDate: startOfWeek.toISOString().split('T')[0], // Format as YYYY-MM-DD
-    endDate: endOfWeek.toISOString().split('T')[0], // Format as YYYY-MM-DD
+    startDate: format(start, 'yyyy-MM-dd'),
+    endDate: format(end, 'yyyy-MM-dd'),
   };
 }
 
-export function getStartOfWeek(date) {
-  const current = new Date(date);
-  const day = current.getUTCDay();
-  const difference = current.getUTCDate() - day + (day === 0 ? -6 : 1);
-  current.setUTCDate(difference);
-  current.setUTCHours(0, 0, 0, 0); // Normalizing time to midnight for consistency
-  return current;
-}
-
-export function formatDate(date) {
-  const day = date.getDate().toString().padStart(2, '0'); // Ensure two digits
-  const month = date.toLocaleString('default', { month: 'short' }); // Get short month name
-
-  return `${day} ${month}`;
-}
-
+// Get the last four weeks starting from today
 export function getLastFourWeeks() {
-  const weeks = [];
   const today = new Date();
-  const todayStartOfWeek = getStartOfWeek(today);
+  const weeks = [];
 
   for (let i = 0; i < 4; i++) {
-    // Calculate the start of the week
-    const startOfWeek = new Date(todayStartOfWeek);
-    startOfWeek.setDate(todayStartOfWeek.getDate() - i * 7);
+    const start = startOfWeek(subWeeks(today, i), { weekStartsOn: 1 });
+    const end = endOfWeek(start, { weekStartsOn: 1 });
 
-    // Calculate the end of the week
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(endOfWeek.getDate() + 6);
-
-    // Push the week data
     weeks.push({
-      start: startOfWeek.toISOString().split('T')[0], // Format as YYYY-MM-DD
-      end: endOfWeek.toISOString().split('T')[0], // Format as YYYY-MM-DD
+      start: format(start, 'yyyy-MM-dd'),
+      end: format(end, 'yyyy-MM-dd'),
     });
   }
 
-  return weeks;
+  return weeks.reverse();
 }
 
-// export const calculateHoursWorked = (start, end) => {
-//   // Helper function to normalize time
-//   const normalizeTime = (time) => {
-//     if (time.includes(':')) {
-//       const [hours, minutes] = time
-//         .split(':')
-//         .map((num) => num.padStart(2, '0'));
-//       return `${hours}:${minutes}`;
-//     } else if (time.length === 1) {
-//       return `0${time}:00`;
-//     } else if (time.length === 2) {
-//       return `${time}:00`;
-//     } else if (time.length === 3) {
-//       return `${time.slice(0, 1)}${time.slice(1, 3)}:00`;
-//     } else if (time.length === 4) {
-//       return `${time.slice(0, 2)}:${time.slice(2)}`;
-//     }
-//     return '00:00'; // Default value if the format is not recognized
-//   };
-
-//   const [startHours, startMinutes] = normalizeTime(start)
-//     .split(':')
-//     .map(Number);
-//   const [endHours, endMinutes] = normalizeTime(end).split(':').map(Number);
-
-//   const startDate = new Date(1970, 0, 1, startHours, startMinutes);
-//   const endDate = new Date(1970, 0, 1, endHours, endMinutes);
-
-//   const diff = endDate - startDate; // Difference in milliseconds
-
-//   let hours;
-//   if (diff < 0) {
-//     // Handle cases where end time is the next day
-//     hours = (24 * 60 * 60 * 1000 + diff) / (60 * 60 * 1000);
-//   } else {
-//     hours = diff / (60 * 60 * 1000);
-//   }
-
-//   return parseFloat(hours.toFixed(2));
-// };
-
-export const calculateHoursWorked = (start, end) => {
-  const normalizeTime = (time) => {
-    if (time.includes(':')) {
-      const [hours, minutes] = time
-        .split(':')
-        .map((num) => num.padStart(2, '0'));
-      return `${hours}:${minutes}`;
-    }
-    if (time.length === 1) return `0${time}:00`;
-    if (time.length === 2) return `${time}:00`;
-    if (time.length === 3) return `${time.slice(0, 1)}${time.slice(1, 3)}:00`;
-    if (time.length === 4) return `${time.slice(0, 2)}:${time.slice(2)}`;
-    return '00:00'; // Default value if the format is not recognized
+// Calculate hours worked between two times
+export function calculateHoursWorked(start, end) {
+  const parseTime = (time) => {
+    const [hours, minutes] = time.split(':').map((num) => parseInt(num, 10));
+    return new Date(1970, 0, 1, hours, minutes);
   };
 
-  const [startHours, startMinutes] = normalizeTime(start)
-    .split(':')
-    .map(Number);
-  const [endHours, endMinutes] = normalizeTime(end).split(':').map(Number);
+  const startDate = parseTime(start);
+  const endDate = parseTime(end);
 
-  const startDate = new Date(1970, 0, 1, startHours, startMinutes);
-  const endDate = new Date(1970, 0, 1, endHours, endMinutes);
-
-  const diff = endDate - startDate; // Difference in milliseconds
-  const msInHour = 60 * 60 * 1000; // Number of milliseconds in an hour
-
-  let hours;
-  if (diff < 0) {
-    // Handle cases where end time is the next day
-    hours = (24 * msInHour + diff) / msInHour;
-  } else {
-    hours = diff / msInHour;
+  let endDateAdjusted = endDate;
+  if (endDate < startDate) {
+    endDateAdjusted = addDays(endDate, 1);
   }
 
-  return Math.round(hours * 100) / 100; // Round to two decimal places
-};
+  const minutesWorked = differenceInMinutes(endDateAdjusted, startDate);
+
+  const hours = Math.floor(minutesWorked / 60);
+  const minutes = minutesWorked % 60;
+
+  const decimalMinutes = minutes / 100;
+  const totalHours = hours + decimalMinutes;
+
+  return parseFloat(totalHours.toFixed(2));
+}
+
+// Get the start and end dates of the previous week
+export function getPreviousWeek(date) {
+  const start = startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 });
+  const end = endOfWeek(start, { weekStartsOn: 1 });
+  return {
+    start: format(start, 'yyyy-MM-dd'),
+    end: format(end, 'yyyy-MM-dd'),
+  };
+}
+
+export function formatDate(date) {
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) {
+    console.error('Invalid date:', date);
+    return 'Invalid Date';
+  }
+  return format(parsedDate, 'dd MMM');
+}
+
+/**
+ * Get the start date of the week for a given date. Assumes the week starts on Monday.
+ * @param {Date} date - The date for which to find the start of the week.
+ * @returns {Date} - The start date of the week.
+ */
+export function getStartOfWeek(date) {
+  const dayOfWeek = date.getDay();
+  const distanceToMonday = (dayOfWeek + 6) % 7; // Calculate distance to Monday
+  const startOfWeek = new Date(date);
+  startOfWeek.setDate(date.getDate() - distanceToMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+  return startOfWeek;
+}
+
+export function calculateTotalMinutes(timesheets) {
+  const totalMinutes = timesheets.reduce((sum, ts) => {
+    const minutesWorked = calculateMinutesWorked(ts.start, ts.end);
+    return sum + minutesWorked;
+  }, 0);
+
+  return totalMinutes;
+}
+
+export function calculateMinutesWorked(start, end) {
+  const parseTime = (time) => {
+    const [hours, minutes] = time.split(':').map((num) => parseInt(num, 10));
+    return new Date(1970, 0, 1, hours, minutes);
+  };
+
+  const startDate = parseTime(start);
+  const endDate = parseTime(end);
+
+  let endDateAdjusted = endDate;
+  if (endDate < startDate) {
+    endDateAdjusted = addDays(endDate, 1);
+  }
+
+  const minutesWorked = differenceInMinutes(endDateAdjusted, startDate);
+  return minutesWorked;
+}
+
+export function convertMinutesToHours(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return { hours, minutes };
+}

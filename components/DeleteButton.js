@@ -1,4 +1,4 @@
-// app/components/DeleteButton.js
+// // app/components/DeleteButton.js
 
 'use client';
 
@@ -12,7 +12,7 @@ const DeleteButton = ({ id }) => {
 
     try {
       const response = await fetch(`/api/delete-timesheet/${id}`, {
-        method: 'POST',
+        method: 'DELETE', // Change method to DELETE
       });
 
       if (response.ok) {

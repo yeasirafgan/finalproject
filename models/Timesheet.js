@@ -1,16 +1,28 @@
 // mainfolder/models/Timesheet.js
 
 import mongoose from 'mongoose';
-
 const timesheetSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  username: { type: String, required: true }, // Ensure this field is defined
+  username: { type: String, required: true },
   date: { type: Date, required: true },
-  start: { type: String, required: true },
-  end: { type: String, required: true },
+  start: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(v),
+      message: (props) => `${props.value} is not a valid time format!`,
+    },
+  },
+  end: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(v),
+      message: (props) => `${props.value} is not a valid time format!`,
+    },
+  },
 });
 
-const Timesheet =
-  mongoose.models.Timesheet || mongoose.model('Timesheet', timesheetSchema);
-
-export default Timesheet;
+// const Timesheet =
+export default mongoose.models.Timesheet ||
+  mongoose.model('Timesheet', timesheetSchema);

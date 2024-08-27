@@ -1,12 +1,13 @@
-// mainfolder/app/admin/page.js
+// // // // // mainfolder/app/admin/page.js
 
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
 import {
-  calculateHoursWorked,
-  getLastFourWeeks,
+  calculateMinutesWorked,
+  convertMinutesToHours,
   formatDate,
-  getStartOfWeek,
+  getLastFourWeeks,
+  getPreviousWeek,
 } from '@/utils/dateUtils';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import Link from 'next/link';
@@ -18,77 +19,80 @@ const AdminPage = async () => {
     redirect('/api/auth/login?post_login_redirect_url=/admin');
   }
 
-  const user = await getUser();
-  const username = user
-    ? `${user.given_name || ''} ${user.family_name || ''}`.trim() || user.email
-    : 'Unknown';
-
+  await getUser();
   await connectMongo();
 
   const timesheets = await Timesheet.find({}).sort({ date: 1 });
-  const dateRanges = getLastFourWeeks();
-  console.log('Date Ranges:', dateRanges);
+
+  const lastFourWeeks = getLastFourWeeks();
+  const previousWeek = getPreviousWeek(new Date());
+
+  const dateRanges = [previousWeek, ...lastFourWeeks];
+  const uniqueDateRanges = Array.from(
+    new Set(dateRanges.map((range) => JSON.stringify(range)))
+  ).map((range) => JSON.parse(range));
+
+  uniqueDateRanges.sort((a, b) => new Date(b.start) - new Date(a.start));
 
   const usersTimesheets = timesheets.reduce((acc, timesheet) => {
     const { username, date, start, end } = timesheet;
-    const weekStartDate = getStartOfWeek(date).toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-    const hoursWorked = calculateHoursWorked(start, end);
-    console.log('Hours worked:', hoursWorked);
+    const timesheetDate = new Date(date).toISOString().split('T')[0];
+    const minutesWorked = calculateMinutesWorked(start, end);
 
     if (!acc[username]) {
-      acc[username] = { username, periods: {}, totalHours: 0 };
+      acc[username] = { username, periods: {}, totalMinutes: 0 };
     }
 
-    // Find the matching period
-    const period = dateRanges.find((range) => {
-      const rangeStart = new Date(range.start);
-      const rangeEnd = new Date(range.end);
-      const weekStart = new Date(weekStartDate);
+    uniqueDateRanges.forEach((range) => {
+      const rangeStart = new Date(range.start).toISOString().split('T')[0];
+      const rangeEnd = new Date(range.end).toISOString().split('T')[0];
 
-      // Check if the weekStartDate falls within the period
-      console.log('Checking period:', {
-        startDate: range.start,
-        endDate: range.end,
-        weekStartDate,
-        rangeStart,
-        rangeEnd,
-        weekStart,
-        inRange: weekStart >= rangeStart && weekStart <= rangeEnd,
-      });
+      const periodStart = new Date(rangeStart);
+      const periodEnd = new Date(rangeEnd);
 
-      return weekStart >= rangeStart && weekStart <= rangeEnd;
+      if (
+        new Date(timesheetDate) >= periodStart &&
+        new Date(timesheetDate) <= periodEnd
+      ) {
+        const periodKey = `${formatDate(new Date(range.start))} - ${formatDate(
+          new Date(range.end)
+        )}`;
+        acc[username].periods[periodKey] =
+          (acc[username].periods[periodKey] || 0) + minutesWorked / 60; // Storing as hours
+        acc[username].totalMinutes += minutesWorked;
+      }
     });
-
-    // Log period details
-    if (period) {
-      console.log('Matched period:', period);
-      const periodKey = `${formatDate(new Date(period.start))} - ${formatDate(
-        new Date(period.end)
-      )}`;
-      acc[username].periods[periodKey] =
-        (acc[username].periods[periodKey] || 0) + hoursWorked;
-      acc[username].totalHours += hoursWorked;
-    } else {
-      console.log('No matching period for week start date:', weekStartDate);
-    }
 
     return acc;
   }, {});
 
-  console.log('Users timesheets:', JSON.stringify(usersTimesheets, null, 2));
+  // Convert total minutes to hours and minutes for each user
+  Object.values(usersTimesheets).forEach((user) => {
+    const { hours, minutes } = convertMinutesToHours(user.totalMinutes);
+    user.totalHours = Math.floor(hours); // Rounding hours to integer
+    user.totalMinutes = Math.round(minutes); // Rounding minutes to integer
+  });
+
+  // Function to format hours and minutes based on conditions
+  const formatTime = (hours, minutes) => {
+    if (minutes === 0) {
+      return `${hours} hrs`;
+    } else {
+      return `${hours} hrs ${minutes} mins`;
+    }
+  };
 
   return (
-    <main className='p-5 sm:p-10'>
-      <div className='flex justify-end space-x-4'>
+    <main className='p-4 sm:p-8'>
+      <div className='flex justify-end gap-3 mb-4'>
         <Link
           href='/api/generate-timesheet?type=summary'
-          className='px-4 py-1 bg-slate-700 hover:bg-slate-900 text-white rounded'
+          className='px-4 py-2 bg-slate-700 hover:bg-slate-900 text-white rounded text-xs sm:text-sm'
         >
           Export to Excel
         </Link>
       </div>
-      <h1 className='text-lg font-semibold mb-2 text-lime-800 hover:text-emerald-950 '>
+      <h1 className='text-md sm:text-lg font-semibold mb-4 text-lime-800 hover:text-emerald-950 text-center sm:text-left'>
         Admin Area
       </h1>
 
@@ -96,23 +100,23 @@ const AdminPage = async () => {
         <table className='min-w-full bg-white border border-gray-200'>
           <thead className='bg-gray-100'>
             <tr>
-              <th className='border border-gray-300 px-4 py-2 text-left text-sm font-semibold w-32 text-lime-800 hover:text-emerald-950'>
+              <th className='border border-gray-300 px-2 py-1 text-left text-xs sm:text-sm font-semibold text-lime-800 hover:text-emerald-950'>
                 Name
               </th>
-              {dateRanges.map((range, index) => (
+              {uniqueDateRanges.map((range, index) => (
                 <th
                   key={index}
-                  className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'
+                  className='border border-gray-300 px-1 py-0.5 text-center text-[10px] sm:text-xs md:text-sm font-semibold text-lime-800 hover:text-emerald-950'
                 >
                   {`${formatDate(new Date(range.start))} - ${formatDate(
                     new Date(range.end)
                   )}`}
                 </th>
               ))}
-              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'>
+              <th className='border border-gray-300 px-2 py-1 text-center text-xs sm:text-sm font-semibold text-lime-800 hover:text-emerald-950'>
                 Total (4 Weeks)
               </th>
-              <th className='border border-gray-300 px-2 py-1 text-center text-xs w-24 text-lime-800 hover:text-emerald-950'>
+              <th className='border border-gray-300 px-2 py-1 text-center text-xs sm:text-sm font-semibold text-lime-800 hover:text-emerald-950'>
                 Details
               </th>
             </tr>
@@ -120,26 +124,31 @@ const AdminPage = async () => {
           <tbody>
             {Object.values(usersTimesheets).map((user) => (
               <tr key={user.username} className='hover:bg-gray-50'>
-                <td className='border border-gray-300 px-4 py-2 text-left text-sm text-slate-700 hover:text-emerald-900 font-bold'>
+                <td className='border border-gray-300 px-2 py-1 text-left text-xs sm:text-sm font-bold text-slate-700 hover:text-emerald-900'>
                   {user.username || 'Unknown'}
                 </td>
-                {dateRanges.map((range, index) => {
+                {uniqueDateRanges.map((range, index) => {
                   const periodKey = `${formatDate(
                     new Date(range.start)
                   )} - ${formatDate(new Date(range.end))}`;
+                  const periodHours = Math.floor(user.periods[periodKey] || 0);
+                  const periodMinutes = Math.round(
+                    (user.periods[periodKey] || 0) * 60
+                  ); // Convert hours to minutes for display
+
                   return (
                     <td
                       key={index}
-                      className='border border-gray-300 px-2 py-1 text-center text-xs font-semibold text-slate-700 hover:text-emerald-900'
+                      className='border border-gray-300 px-2 py-1 text-center text-xs sm:text-sm font-semibold text-slate-700 hover:text-emerald-900'
                     >
-                      {(user.periods[periodKey] || 0).toFixed(2)} hrs
+                      {formatTime(periodHours, periodMinutes % 60)}
                     </td>
                   );
                 })}
-                <td className='border border-gray-300 px-2 py-1 text-center text-sm font-bold text-slate-700 hover:text-emerald-900'>
-                  {user.totalHours.toFixed(2)} hrs
+                <td className='border border-gray-300 px-2 py-1 text-center text-xs sm:text-sm font-bold text-slate-700 hover:text-emerald-900'>
+                  {formatTime(user.totalHours, user.totalMinutes)}
                 </td>
-                <td className='border border-gray-300 px-2 py-1 text-center text-sm '>
+                <td className='border border-gray-300 px-2 py-1 text-center text-xs sm:text-sm'>
                   <Link
                     href={`/admin/${encodeURIComponent(user.username)}`}
                     className='text-emerald-700 hover:text-green-500 font-bold'

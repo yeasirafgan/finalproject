@@ -1,4 +1,4 @@
-// // mainfolder/actions/actions.js
+// //mainfolder/actions/actions.js
 
 'use server';
 
@@ -23,7 +23,17 @@ export default async function createTimesheet(formData) {
     const dateStr = formData.get('date');
     const workstart = formData.get('start');
     const workend = formData.get('end');
+
+    // Validate dateStr
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date format');
+    }
+
+    console.log(`Date Parsed: ${date}`);
+    const { startDate, endDate } = getWeeklyPeriod(date);
+
+    console.log(`Weekly Period: StartDate: ${startDate}, EndDate: ${endDate}`);
 
     const newTimesheet = new Timesheet({
       userId,
@@ -35,7 +45,6 @@ export default async function createTimesheet(formData) {
 
     await newTimesheet.save();
 
-    const { startDate, endDate } = getWeeklyPeriod(date);
     const hoursWorked = calculateHoursWorked(workstart, workend);
 
     await WeeklySummary.findOneAndUpdate(
@@ -44,9 +53,11 @@ export default async function createTimesheet(formData) {
       { upsert: true }
     );
 
-    console.log('Timesheet saved and weekly summary updated successfully');
+    console.log(
+      `Start: ${workstart}, End: ${workend}, Hours Worked: ${hoursWorked}`
+    );
   } catch (error) {
-    console.error('Error saving timesheet:', error.message);
+    console.error('Error saving timesheet:', error);
     // Handle the error appropriately, e.g., by showing an error message
   }
 }

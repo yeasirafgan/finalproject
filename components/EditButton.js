@@ -1,3 +1,5 @@
+// // app/components/EditButton.js
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -6,7 +8,6 @@ const EditButton = ({ id }) => {
   const router = useRouter();
 
   const handleEdit = () => {
-    // Redirect to the edit page with the timesheet ID
     router.push(`/admin/edit-timesheet/${id}`);
   };
 
