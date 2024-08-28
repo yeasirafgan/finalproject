@@ -14,11 +14,15 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 const AdminPage = async () => {
-  const { isAuthenticated, getUser } = getKindeServerSession();
+  const { isAuthenticated, getUser, getPermission } = getKindeServerSession();
   if (!(await isAuthenticated())) {
     redirect('/api/auth/login?post_login_redirect_url=/admin');
   }
 
+  const requiredPermission = await getPermission('delete:timesheet');
+  if (!requiredPermission?.isGranted) {
+    redirect('/timesheet');
+  }
   await getUser();
   await connectMongo();
 

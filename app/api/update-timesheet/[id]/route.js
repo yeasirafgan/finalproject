@@ -5,6 +5,7 @@ import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
 import WeeklySummary from '@/models/WeeklySummary';
 import { calculateHoursWorked, getWeeklyPeriod } from '@/utils/dateUtils';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req, { params }) {
   try {
@@ -45,6 +46,7 @@ export async function POST(req, { params }) {
       { upsert: true }
     );
 
+    await revalidatePath(`/admin/${timesheet.userId}`);
     return new NextResponse('Timesheet updated successfully', { status: 200 });
   } catch (error) {
     console.error('Error updating timesheet:', error);

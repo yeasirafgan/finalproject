@@ -9,6 +9,8 @@ const EditButton = ({ id }) => {
 
   const handleEdit = () => {
     router.push(`/admin/edit-timesheet/${id}`);
+
+    router.refresh();
   };
 
   return (

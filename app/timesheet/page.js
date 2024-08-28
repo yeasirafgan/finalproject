@@ -26,7 +26,7 @@ const TimesheetPage = async ({ searchParams }) => {
   return (
     <main className='flex flex-col md:flex-row justify-center items-start bg-white p-5 space-y-5 md:space-y-0'>
       <div className='bg-white shadow-lg rounded-lg p-8 w-full md:w-1/2 lg:w-1/3'>
-        <h1 className='text-md font-bold mb-6 text-emerald-900'>
+        <h1 className='text-md font-bold mb-6 text-emerald-900 text-center md:text-left'>
           How many hours you work today
         </h1>
         <TimesheetForm onSubmit={handleSubmit} username={username} />
