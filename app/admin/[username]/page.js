@@ -12,6 +12,11 @@ import {
 import Link from 'next/link';
 import { parseISO, format, subWeeks, startOfDay } from 'date-fns';
 
+export const metadata = {
+  title: 'Staff details',
+  description: 'Simple timesheet app for Deerpark staffs',
+};
+
 const UserDetailPage = async ({ params }) => {
   const username = decodeURIComponent(params.username);
 

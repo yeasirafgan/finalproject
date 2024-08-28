@@ -6,6 +6,11 @@ import UserTimesheetData from '@/components/UserTimesheetData';
 import { redirect } from 'next/navigation';
 import TimesheetForm from './TimesheetForm';
 
+export const metadata = {
+  title: 'Timesheet page',
+  description: 'Simple timesheet app for Deerpark staffs',
+};
+
 const TimesheetPage = async ({ searchParams }) => {
   const { isAuthenticated, getUser } = getKindeServerSession();
   if (!(await isAuthenticated())) {

@@ -1,5 +1,10 @@
 // // // // // mainfolder/app/admin/page.js
 
+export const metadata = {
+  title: 'Admin page',
+  description: 'Simple timesheet app for Deerpark staffs',
+};
+
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
 import {

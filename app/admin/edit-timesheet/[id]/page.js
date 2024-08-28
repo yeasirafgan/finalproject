@@ -3,6 +3,10 @@
 import EditTimesheetForm from '@/components/EditTimesheetForm';
 import connectMongo from '@/db/connectMongo';
 import Timesheet from '@/models/Timesheet';
+export const metadata = {
+  title: 'Edit staffs worktime',
+  description: 'Simple timesheet app for Deerpark staffs',
+};
 
 export default async function EditTimesheetPage({ params }) {
   // Fetch the data on the server
