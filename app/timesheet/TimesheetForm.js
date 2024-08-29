@@ -58,9 +58,79 @@ const TimesheetForm = ({ onSubmit, username }) => {
   };
 
   return (
+    // <form
+    //   onSubmit={handleSubmit}
+    //   className='space-y-6 max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-200'
+    // >
+    //   <div className='flex flex-col'>
+    //     <label className='text-sm font-medium text-gray-700' htmlFor='date'>
+    //       Date
+    //     </label>
+    //     <DatePicker
+    //       selected={formData.date}
+    //       onChange={handleDateChange}
+    //       dateFormat='dd MMMM yyyy'
+    //       className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+    //       required
+    //       popperClassName='react-datepicker-popper'
+    //       calendarClassName='react-datepicker-custom'
+    //       locale={enGB} // Set locale to start week on Monday
+    //     />
+    //   </div>
+
+    //   <div className='flex flex-col sm:flex-row sm:space-x-4'>
+    //     <div className='flex flex-col flex-1'>
+    //       <label className='text-sm font-medium text-gray-700' htmlFor='start'>
+    //         Start Time
+    //       </label>
+    //       <input
+    //         type='time'
+    //         name='start'
+    //         id='start'
+    //         value={formData.start}
+    //         onChange={handleChange}
+    //         className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+    //         required
+    //       />
+    //     </div>
+
+    //     <div className='flex flex-col flex-1 mt-4 sm:mt-0'>
+    //       <label className='text-sm font-medium text-gray-700' htmlFor='end'>
+    //         End Time
+    //       </label>
+    //       <input
+    //         type='time'
+    //         name='end'
+    //         id='end'
+    //         value={formData.end}
+    //         onChange={handleChange}
+    //         className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+    //         required
+    //       />
+    //     </div>
+    //   </div>
+
+    //   {error && <div className='text-red-500 text-sm'>{error}</div>}
+    //   {successMessage && (
+    //     <div className='text-green-500 text-sm'>{successMessage}</div>
+    //   )}
+
+    //   <button
+    //     type='submit'
+    //     disabled={isSubmitting}
+    //     className={`w-full py-3 px-4 rounded-lg font-medium text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+    //       isSubmitting
+    //         ? 'bg-gray-400 cursor-not-allowed'
+    //         : 'bg-emerald-600 hover:bg-emerald-700'
+    //     }`}
+    //   >
+    //     {isSubmitting ? 'Submitting...' : 'Submit'}
+    //   </button>
+    // </form>
+
     <form
       onSubmit={handleSubmit}
-      className='space-y-6 max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-200'
+      className='space-y-6 w-full max-w-lg mx-auto p-4 bg-white rounded-lg shadow-lg border border-gray-200'
     >
       <div className='flex flex-col'>
         <label className='text-sm font-medium text-gray-700' htmlFor='date'>
