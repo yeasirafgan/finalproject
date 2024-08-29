@@ -289,7 +289,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg md:hidden transform transition-transform duration-300 mt-20 rounded-e-3xl ${
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg md:hidden transform transition-transform duration-300 mt-20 rounded-e-3xl h-fit ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ zIndex: 999 }}
