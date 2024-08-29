@@ -1,19 +1,16 @@
-// // // // app/api/generate-timesheet/route.js
+// // app/api/generate-timesheet/route.js
 
 // import { NextResponse } from 'next/server';
 // import { exportToExcel } from '@/utils/exportsToExcel';
-// import fs from 'fs';
-// import path from 'path';
 
 // export async function GET(request) {
 //   const { searchParams } = new URL(request.url);
 //   const type = searchParams.get('type') || 'detail';
 
 //   try {
-//     const filePath = await exportToExcel(type);
-//     const fileBuffer = fs.readFileSync(filePath);
+//     const buffer = await exportToExcel(type);
 
-//     return new NextResponse(fileBuffer, {
+//     return new NextResponse(buffer, {
 //       headers: {
 //         'Content-Type':
 //           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -26,17 +23,29 @@
 //   }
 // }
 
-// app/api/generate-timesheet/route.js
-
 import { NextResponse } from 'next/server';
-import { exportToExcel } from '@/utils/exportsToExcel';
+import { generateExcelFile } from '@/utils/createExcelFile';
+import { calculateSummaryData } from '@/utils/calculateSummaryData'; // Import the new function
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type') || 'detail';
 
   try {
-    const buffer = await exportToExcel(type);
+    let data;
+
+    // Fetch your raw data here
+    // For example, const rawData = await fetchDataFromDatabase();
+
+    if (type === 'summary') {
+      // Calculate summary data if type is 'summary'
+      data = calculateSummaryData(rawData);
+    } else {
+      // Use rawData directly for detailed report
+      data = rawData;
+    }
+
+    const buffer = await generateExcelFile(data, type);
 
     return new NextResponse(buffer, {
       headers: {
