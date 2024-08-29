@@ -30,66 +30,6 @@ export async function fetchTimesheetData() {
   }));
 }
 
-// export async function fetchTimesheetSummary() {
-//   await connectMongo();
-
-//   const weeks = getLastFourWeeks();
-//   const summary = {};
-
-//   const timesheets = await Timesheet.find({
-//     date: {
-//       $gte: new Date(weeks[0].start),
-//       $lte: new Date(weeks[3].end),
-//     },
-//   });
-
-//   timesheets.forEach((ts) => {
-//     const username = ts.username;
-//     if (!summary[username]) {
-//       summary[username] = { weeklyHours: [], totalHours: 0 };
-//       weeks.forEach(() => summary[username].weeklyHours.push(0));
-//     }
-
-//     for (let i = 0; i < weeks.length; i++) {
-//       const week = weeks[i];
-//       const entryDate = new Date(ts.date);
-//       if (
-//         entryDate >= new Date(week.start) &&
-//         entryDate <= new Date(week.end)
-//       ) {
-//         const hoursWorked = calculateHoursWorked(ts.start, ts.end);
-//         summary[username].weeklyHours[i] += hoursWorked;
-//         summary[username].totalHours += hoursWorked;
-//         break;
-//       }
-//     }
-//   });
-
-//   return Object.entries(summary).map(([username, data]) => {
-//     const summaryData = {
-//       username,
-//       totalHours: data.totalHours.toFixed(2),
-//     };
-
-//     weeks.forEach((week, i) => {
-//       const formattedWeek = `${new Date(week.start).getDate()} ${new Date(
-//         week.start
-//       ).toLocaleString('en-GB', { month: 'short' })} ${new Date(week.start)
-//         .getFullYear()
-//         .toString()
-//         .slice(-2)} - ${new Date(week.end).getDate()} ${new Date(
-//         week.end
-//       ).toLocaleString('en-GB', { month: 'short' })} ${new Date(week.end)
-//         .getFullYear()
-//         .toString()
-//         .slice(-2)}`;
-//       summaryData[formattedWeek] = data.weeklyHours[i].toFixed(2);
-//     });
-
-//     return summaryData;
-//   });
-// }
-
 export async function fetchTimesheetSummary() {
   await connectMongo();
 

@@ -279,8 +279,8 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <LoginLink className='text-white px-4 py-2 bg-slate-700 hover:bg-slate-900 hover:text-white transition duration-300 rounded-lg'>
-                Login
+              <LoginLink className='text-white px-4 py-2  bg-slate-700 hover:bg-slate-900 hover:text-white transition duration-300 rounded-lg'>
+                Log in
               </LoginLink>
             )}
           </li>

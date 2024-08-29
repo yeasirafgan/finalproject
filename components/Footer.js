@@ -1,21 +1,4 @@
 // // mainfolder/components/Footer.js
-// 'use client';
-
-// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-
-// const Footer = () => {
-//   const { user, isAuthenticated } = useKindeBrowserClient();
-//   return (
-//     <footer className='mt-auto text-right text-zinc-400 py-5 px-7 border-t flex justify-between '>
-//       {isAuthenticated && (
-//         <p className='text-xs ml-3'>Logged in as {user?.email}</p>
-//       )}
-//       <small>All Rights Reserved &copy; Deerpark | 2024</small>
-//     </footer>
-//   );
-// };
-
-// export default Footer;
 
 'use client';
 
