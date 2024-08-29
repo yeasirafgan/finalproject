@@ -52,72 +52,13 @@ const UserTimesheetData = async ({ username }) => {
     };
 
     return (
-      // <div className='p-4 sm:p-5'>
-      //   <h2
-      //     className={`text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center sm:text-left`}
-      //   >
-      //     {`${username}'s Timesheets`}
-      //   </h2>
-      //   <div className='overflow-x-auto'>
-      //     <table className='min-w-full bg-white border text-xs sm:text-sm'>
-      //       <thead>
-      //         <tr className='bg-gray-100'>
-      //           <th className='border px-2 sm:px-4 py-2 text-left'>Date</th>
-      //           <th className='border px-2 sm:px-4 py-2 text-left'>Start</th>
-      //           <th className='border px-2 sm:px-4 py-2 text-left'>End</th>
-      //           <th className='border px-2 sm:px-4 py-2 text-left'>
-      //             Hours Worked
-      //           </th>
-      //         </tr>
-      //       </thead>
-      //       <tbody>
-      //         {timesheets.map((ts) => {
-      //           const { hours, minutes } = convertMinutesToHours(
-      //             calculateTotalMinutes([{ start: ts.start, end: ts.end }])
-      //           );
-
-      //           const formattedHours = Math.floor(hours);
-      //           const formattedMinutes = Math.round(minutes);
-
-      //           return (
-      //             <tr key={ts._id} className='hover:bg-gray-50'>
-      //               <td className='border px-2 sm:px-4 py-1 sm:py-2'>
-      //                 {formatDate(ts.date)}
-      //               </td>
-      //               <td className='border px-2 sm:px-4 py-1 sm:py-2'>
-      //                 {ts.start}
-      //               </td>
-      //               <td className='border px-2 sm:px-4 py-1 sm:py-2'>
-      //                 {ts.end}
-      //               </td>
-      //               <td className='border px-2 sm:px-4 py-1 sm:py-2 font-medium'>
-      //                 {formatTime(formattedHours, formattedMinutes)}
-      //               </td>
-      //             </tr>
-      //           );
-      //         })}
-      //       </tbody>
-      //       <tfoot>
-      //         <tr className='bg-gray-100'>
-      //           <td
-      //             colSpan='3'
-      //             className='border px-2 sm:px-4 py-2 font-bold text-left'
-      //           >
-      //             Total Hours
-      //           </td>
-      //           <td className='border px-2 sm:px-4 py-2 font-bold'>
-      //             {formatTime(totalHours, remainingMinutes)}
-      //           </td>
-      //         </tr>
-      //       </tfoot>
-      //     </table>
-      //   </div>
-      // </div>
-      <div className='p-4 sm:p-5 w-full'>
-        <h2 className='text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center sm:text-left'>
-          {`${username}'s Timesheets`}
+      <div className='p-4 sm:p-5'>
+        <h2
+          className={`text-xl md:text-lg font-semibold mb-3 sm:mb-4 text-center sm:text-left text-slate-700`}
+        >
+          {`${username}'s latest work`}
         </h2>
-        <div className='overflow-x-auto'>
+        <div className='overflow-x-auto rounded-md'>
           <table className='min-w-full bg-white border text-xs sm:text-sm'>
             <thead>
               <tr className='bg-gray-100'>

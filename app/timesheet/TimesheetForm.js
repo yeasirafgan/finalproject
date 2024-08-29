@@ -139,7 +139,7 @@ const TimesheetForm = ({ onSubmit, username }) => {
           selected={formData.date}
           onChange={handleDateChange}
           dateFormat='dd MMMM yyyy'
-          className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+          className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-700 sm:text-sm'
           required
           popperClassName='react-datepicker-popper'
           calendarClassName='react-datepicker-custom'
@@ -158,7 +158,7 @@ const TimesheetForm = ({ onSubmit, username }) => {
             id='start'
             value={formData.start}
             onChange={handleChange}
-            className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+            className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-700 sm:text-sm'
             required
           />
         </div>
@@ -173,7 +173,7 @@ const TimesheetForm = ({ onSubmit, username }) => {
             id='end'
             value={formData.end}
             onChange={handleChange}
-            className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
+            className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-700 sm:text-sm'
             required
           />
         </div>
@@ -187,10 +187,10 @@ const TimesheetForm = ({ onSubmit, username }) => {
       <button
         type='submit'
         disabled={isSubmitting}
-        className={`w-full py-3 px-4 rounded-lg font-medium text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+        className={`w-full py-3 px-4 rounded-lg font-medium text-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 ${
           isSubmitting
             ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-emerald-600 hover:bg-emerald-700'
+            : 'bg-slate-700 hover:bg-slate-800'
         }`}
       >
         {isSubmitting ? 'Submitting...' : 'Submit'}
