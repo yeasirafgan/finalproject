@@ -1,4 +1,4 @@
-// // app/api/generate-timesheet/route.js
+// // // app/api/generate-timesheet/route.js
 
 // import { NextResponse } from 'next/server';
 // import { exportToExcel } from '@/utils/exportsToExcel';
@@ -24,28 +24,14 @@
 // }
 
 import { NextResponse } from 'next/server';
-import { generateExcelFile } from '@/utils/createExcelFile';
-import { calculateSummaryData } from '@/utils/calculateSummaryData'; // Import the new function
+import { exportToExcel } from '@/utils/exportsToExcel';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const type = searchParams.get('type') || 'detail';
+  const type = searchParams.get('type') || 'detailed';
 
   try {
-    let data;
-
-    // Fetch your raw data here
-    // For example, const rawData = await fetchDataFromDatabase();
-
-    if (type === 'summary') {
-      // Calculate summary data if type is 'summary'
-      data = calculateSummaryData(rawData);
-    } else {
-      // Use rawData directly for detailed report
-      data = rawData;
-    }
-
-    const buffer = await generateExcelFile(data, type);
+    const buffer = await exportToExcel(type);
 
     return new NextResponse(buffer, {
       headers: {

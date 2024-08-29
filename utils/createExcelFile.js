@@ -1,4 +1,4 @@
-// //mainfolder / utils / createExcelFile.js;
+// // //mainfolder / utils / createExcelFile.js;
 
 // import ExcelJS from 'exceljs';
 
@@ -46,13 +46,15 @@ export async function generateExcelFile(data, type) {
   if (type === 'summary') {
     worksheet.columns = [
       { header: 'Username', key: 'username', width: 20 },
-      { header: 'Weekly Count', key: 'weeklyCount', width: 15 },
-      { header: 'Weekly Total Hours', key: 'weeklyTotalHours', width: 20 },
-      {
-        header: '4-Weekly Total Hours',
-        key: 'fourWeeklyTotalHours',
-        width: 20,
-      },
+      { header: 'Total Hours', key: 'totalHours', width: 15 },
+      // Dynamically add columns for each week
+      ...Object.keys(data[0])
+        .filter((key) => key !== 'username' && key !== 'totalHours')
+        .map((key) => ({
+          header: key,
+          key,
+          width: 20,
+        })),
     ];
   } else {
     worksheet.columns = [
